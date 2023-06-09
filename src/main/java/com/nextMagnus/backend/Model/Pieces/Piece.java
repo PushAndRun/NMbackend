@@ -1,6 +1,6 @@
-package Model.Pieces;
+package com.nextMagnus.backend.Model.Pieces;
 
-import Model.Board;
+import com.nextMagnus.backend.Model.Board;
 
 public interface Piece {
 

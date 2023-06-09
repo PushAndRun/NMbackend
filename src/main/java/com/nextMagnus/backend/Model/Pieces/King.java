@@ -1,10 +1,10 @@
-package Model.Pieces;
+package com.nextMagnus.backend.Model.Pieces;
 
-import Model.Board;
-import Model.MoveGenerator;
+import com.nextMagnus.backend.Model.Board;
+import com.nextMagnus.backend.Model.MoveGenerator;
 
-import static Model.Mask.*;
-import static Model.Mask.COLUMN_AB;
+import static com.nextMagnus.backend.Model.Mask.*;
+import static com.nextMagnus.backend.Model.Mask.COLUMN_AB;
 
 public class King implements Piece {
 

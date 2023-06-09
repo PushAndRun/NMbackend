@@ -1,11 +1,11 @@
-package Model;
+package com.nextMagnus.backend.Model;
 
-import Model.Pieces.*;
+import com.nextMagnus.backend.Model.Pieces.*;
 
 
 import java.util.HashMap;
 
-import static Model.Mask.*;
+import static com.nextMagnus.backend.Model.Mask.*;
 
 
 public class MoveGenerator {

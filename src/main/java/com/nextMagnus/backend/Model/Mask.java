@@ -1,4 +1,4 @@
-package Model;
+package com.nextMagnus.backend.Model;
 
 public class Mask {
 

@@ -1,5 +1,6 @@
 package com.nextMagnus.backend;
 
+import com.nextMagnus.backend.Model.MoveGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

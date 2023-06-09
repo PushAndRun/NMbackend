@@ -1,8 +1,8 @@
-package Model.Pieces;
+package com.nextMagnus.backend.Model.Pieces;
 
-import Model.Board;
+import com.nextMagnus.backend.Model.Board;
 
-import static Model.Mask.*;
+import static com.nextMagnus.backend.Model.Mask.*;
 
 public class Knights implements Piece {
 

@@ -1,11 +1,11 @@
-package Model;
+package com.nextMagnus.backend.Model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static Model.Mask.*;
-import static Model.MoveGenerator.*;
+import static com.nextMagnus.backend.Model.Mask.*;
+import static com.nextMagnus.backend.Model.MoveGenerator.*;
 
 public class Board implements Comparable <Board> {
 

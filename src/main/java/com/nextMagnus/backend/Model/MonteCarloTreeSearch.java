@@ -1,4 +1,4 @@
-package Model;
+package com.nextMagnus.backend.Model;
 
 import java.util.ArrayList;
 import java.util.List;
