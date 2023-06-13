@@ -4,9 +4,9 @@ public class FenDTO {
 
     private String fen = "";
 
-    private String possibleMoves;
+    private String move;
 
-    private long usedTime = 0;
+    private long usedTimeByAi = 0;
 
     private String mode = "AlphaBeta";
 
@@ -19,23 +19,35 @@ public class FenDTO {
     }
 
     public long getUsedTime() {
-        return usedTime;
+        return usedTimeByAi;
     }
 
     public String getMode() {
         return mode;
     }
 
+    public String getMove() {
+        return move;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     public void setFen(String fen) {
         this.fen = fen;
     }
 
-    public void setPossibleMoves(String possibleMoves) {
-        this.possibleMoves = possibleMoves;
+    public void setMove(String move) {
+        this.move = move;
     }
 
     public void setUsedTime(long usedTime) {
-        this.usedTime = usedTime;
+        this.usedTimeByAi = usedTime;
     }
 
     public void setGameOver(boolean gameOver) {

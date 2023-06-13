@@ -11,23 +11,45 @@ import org.springframework.stereotype.Service;
 public class MoveService {
     MoveGenerator mg = new MoveGenerator();
 
+
     public FenDTO get(FenDTO fenObject){
         Board board = new Board(fenObject.getFen());
 
+        //check if the game is over
+        if(board.isGameOver()){
+            if(board.isRemis()){
+                fenObject.setMessage("Game Over - Remis");
+                fenObject.setGameOver(true);
+            } else {
+                if(board.isWhiteWon()){
+                    fenObject.setMessage("Game Over - White Won");
+                    fenObject.setGameOver(true);
+                } else {
+                    fenObject.setMessage("Game Over - Black Won");
+                    fenObject.setGameOver(true);
+                }
+            }
+            return fenObject;
+        }
+
+        //if not over make a move
         long currentTime = System.currentTimeMillis();
         String validMoves = mg.validMoves(board);
 
         if (fenObject.getMode().equals("MonteCarloTreeSearch")){
             long timeLimit = MoveGenerator.standardDeviationTimeLimit(board.getNextMoveCount(), 300L);
             Node node = new Node (null, board);
-            MoveGenerator.makeMove(board, MonteCarloTreeSearch.getBestMove(node, (int) timeLimit));
+            String move = MonteCarloTreeSearch.getBestMove(node, (int) timeLimit);
+            fenObject.setMove(mg.convertInternalMoveToGameserverMove(move, board));
+            MoveGenerator.makeMove(board, move);
         } else if (fenObject.getMode().equals("AlphaBeta")) {
-            mg.makeMove(board, mg.moveSelector(board, validMoves, fenObject.getUsedTime()));
+            String move = mg.moveSelector(board, validMoves, fenObject.getUsedTime());
+            fenObject.setMove(mg.convertInternalMoveToGameserverMove(move, board));
+            mg.makeMove(board, move);
         }
 
         fenObject.setFen(board.bitboardsToFenParser());
         fenObject.setUsedTime(fenObject.getUsedTime() + (System.currentTimeMillis() - currentTime));
-        fenObject.setPossibleMoves(mg.validMoves(board));
 
 
         //check if game is over

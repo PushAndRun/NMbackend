@@ -669,8 +669,6 @@ public class MoveGenerator {
             return validMoves;
         }
 
-
-
         if ((gameTimeLimit - usedTimeInMs) < panicModeTimeBuffer) {
             System.out.println("Entered panic mode");
             int depth = 2;
@@ -679,11 +677,11 @@ public class MoveGenerator {
 
         System.out.println("Using principal variation search for move generation");
         //Iterative Deepening Search + PVS (mit PV Zugsortierung)
-        long timeLimit = standardDeviationTimeLimit(b.getNextMoveCount(), 300L); //gamePhaseTimeLimit(b, 250);
+        long timeLimit = standardDeviationTimeLimit(b.getNextMoveCount(), 500L); //gamePhaseTimeLimit(b, 250);
         return PrincipalVariationSearch.principalVariationSearchWithTimelimit(b, timeLimit).substring(0, 4);
 
         //System.out.println("Using alpha beta search for move generation");
-        //return alphaBeta(b, suchtiefe, Integer.MIN_VALUE, Integer.MAX_VALUE, true).substring(0, 4);
+        //return alphaBeta(b, 4, Integer.MIN_VALUE, Integer.MAX_VALUE, true).substring(0, 4);
         //String bestMoveFromMinMax = minMax(b, suchtiefe, true).substring(0,4);
 
     }
