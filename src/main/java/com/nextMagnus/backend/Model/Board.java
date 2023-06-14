@@ -12,7 +12,7 @@ public class Board implements Comparable <Board> {
     private boolean gameOver = false;
     private boolean whiteWon = false;
     private boolean remis = false;
-    private boolean KIPlaysWhite = true;
+    private boolean KIPlaysWhite = false;
     private boolean currentPlayerIsWhite = false;
     private int halfMoveCount = 0;
     private int nextMoveCount = 0;
@@ -54,7 +54,7 @@ public class Board implements Comparable <Board> {
      */
     public void fenToBitboardParser(String fenString) throws IllegalArgumentException {
 
-        String positions = "";
+        String positions;
         String emptyMask ="0000000000000000000000000000000000000000000000000000000000000000";
 
         if (fenString.contains(" ")) {
@@ -169,8 +169,9 @@ public class Board implements Comparable <Board> {
         this.whiteToCastleQueenside = b.whiteToCastleQueenside;
         this.blackToCastleQueenside = b.blackToCastleQueenside;
         this.enPassants = b.enPassants;
-        this.assessmentValue = Integer.MAX_VALUE;
-
+        this.whiteWon = b.whiteWon;
+        this.gameOver = b.gameOver;
+        this.remis = b.remis;
     }
 
     /**
@@ -188,8 +189,8 @@ public class Board implements Comparable <Board> {
     public Board createBoardFromMove (String move){
         Board newBoard = new Board(this);
         //System.out.println("MakeMove: "+move);
-        if (!this.isKIPlayingWhite()){
-            newBoard.setKIPlaysWhite(false);
+        if (this.isCurrentPlayerIsWhite()){
+            newBoard.setCurrentPlayerIsWhite(false);
         }
         makeMove(newBoard, move);
         //newBoard.assessBoardTPT(assesedBoards, zobrist);
@@ -255,8 +256,8 @@ public class Board implements Comparable <Board> {
         }
 
         //Mobility
-        this.assessmentValue += (int) MoveGenerator.getMoveCount(ownValidMoves)*10;
-        this.assessmentValue -= (int) MoveGenerator.getMoveCount(opponentsValidMoves)*10;
+        this.assessmentValue +=  MoveGenerator.getMoveCount(ownValidMoves)*10;
+        this.assessmentValue -=  MoveGenerator.getMoveCount(opponentsValidMoves)*10;
 
         //Attacked Pieces
         if (currentPlayerIsWhite){
@@ -290,22 +291,22 @@ public class Board implements Comparable <Board> {
             long hangingPawns = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & this.getOwnPawns());
             long hangingPieces = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & (this.getOwnBishops() | this.getOwnKnights() | this.getOwnRooks()));
             long hangingQueen = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & this.getOwnQueen());
-            this.assessmentValue -= (300*hangingPieces+50*hangingPawns+700*hangingQueen);
+            this.assessmentValue -= (int) (300*hangingPieces+50*hangingPawns+700*hangingQueen);
 
             long hangingPawnsO = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & this.getOppositePawns());
             long hangingPiecesO = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & (this.getOppositeBishops() | this.getOppositeKnights() | this.getOppositeRooks()));
             long hangingQueenO = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & this.getOppositeQueen());
-            this.assessmentValue += (300*hangingPiecesO+50*hangingPawnsO+700*hangingQueenO);
+            this.assessmentValue += (int) (300*hangingPiecesO+50*hangingPawnsO+700*hangingQueenO);
         } else {
             long hangingPawns = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & this.getOwnPawns());
             long hangingPieces = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & (this.getOwnBishops() | this.getOwnKnights() | this.getOwnRooks()));
             long hangingQueen = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & this.getOwnQueen());
-            this.assessmentValue -= (300*hangingPieces+50*hangingPawns+700*hangingQueen);
+            this.assessmentValue -= (int) (300*hangingPieces+50*hangingPawns+700*hangingQueen);
 
             long hangingPawnsO = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & this.getOppositePawns());
             long hangingPiecesO = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & (this.getOppositeBishops() | this.getOppositeKnights() | this.getOppositeRooks()));
             long hangingQueenO = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & this.getOppositeQueen());
-            this.assessmentValue += (300*hangingPiecesO+50*hangingPawnsO+700*hangingQueenO);
+            this.assessmentValue += (int) (300*hangingPiecesO+50*hangingPawnsO+700*hangingQueenO);
         }
 
         //Doubled pawns
@@ -343,7 +344,7 @@ public class Board implements Comparable <Board> {
             this.assessmentValue += (pstScoreBlack-pstScoreWhite);
         }
 
-        return (int)this.assessmentValue;
+        return this.assessmentValue;
     }
 
     public int assessBoardTPT(HashMap<Long,Integer> assesedBoards, Zobrist z){
@@ -409,8 +410,8 @@ public class Board implements Comparable <Board> {
         }
 
         //Mobility
-        this.assessmentValue += (int) MoveGenerator.getMoveCount(ownValidMoves)*10;
-        this.assessmentValue -= (int) MoveGenerator.getMoveCount(opponentsValidMoves)*10;
+        this.assessmentValue += MoveGenerator.getMoveCount(ownValidMoves)*10;
+        this.assessmentValue -= MoveGenerator.getMoveCount(opponentsValidMoves)*10;
 
         //Attacked Pieces
         if (currentPlayerIsWhite){
@@ -453,12 +454,12 @@ public class Board implements Comparable <Board> {
             long hangingPawns = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & this.getOwnPawns());
             long hangingPieces = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & (this.getOwnBishops() | this.getOwnKnights() | this.getOwnRooks()));
             long hangingQueen = Long.bitCount(~fieldsAttackedByBlack(this) &fieldsAttackedByWhite(this) & this.getOwnQueen());
-            this.assessmentValue -= (300*hangingPieces+50*hangingPawns+700*hangingQueen);
+            this.assessmentValue += (300*hangingPieces+50*hangingPawns+700*hangingQueen);
 
             long hangingPawnsO = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & this.getOppositePawns());
             long hangingPiecesO = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & (this.getOppositeBishops() | this.getOppositeKnights() | this.getOppositeRooks()));
             long hangingQueenO = Long.bitCount(fieldsAttackedByBlack(this) &~fieldsAttackedByWhite(this) & this.getOppositeQueen());
-            this.assessmentValue += (300*hangingPiecesO+50*hangingPawnsO+700*hangingQueenO);
+            this.assessmentValue -= (300*hangingPiecesO+50*hangingPawnsO+700*hangingQueenO);
         }
 
         //Doubled pawns
@@ -538,6 +539,7 @@ public class Board implements Comparable <Board> {
 
             if (currentPlayerIsWhite) {
                 return this.getAssessmentValue() * (-1);
+
             } else {
                 return this.getAssessmentValue();
             }

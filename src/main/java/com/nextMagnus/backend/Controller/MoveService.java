@@ -14,6 +14,7 @@ public class MoveService {
 
     public FenDTO get(FenDTO fenObject){
         Board board = new Board(fenObject.getFen());
+        board.setKIPlaysWhite(false);
 
         //check if the game is over
         if(board.isGameOver()){

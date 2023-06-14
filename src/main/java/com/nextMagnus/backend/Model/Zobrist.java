@@ -33,7 +33,7 @@ public class Zobrist {
         }
         ZobristMapBlackMove = getSecureRandom();
     }
-    public static long getZobristHash(long whitePawn,long whiteKnight,long whiteBishop,long whiteRook,long whiteQueen,long whiteKing,long blackPawn,long blackKnight,long blackBishop,long blackRook,long blackQueen,long BK,boolean castleWhiteKingside,boolean castleWhiteQueenside,boolean castleBlackKingside,boolean castleBlackQueenside,boolean WhiteToMove) {
+    public long getZobristHash(long whitePawn,long whiteKnight,long whiteBishop,long whiteRook,long whiteQueen,long whiteKing,long blackPawn,long blackKnight,long blackBishop,long blackRook,long blackQueen,long BK,boolean castleWhiteKingside,boolean castleWhiteQueenside,boolean castleBlackKingside,boolean castleBlackQueenside,boolean WhiteToMove) {
         long zobristKey = 0;
         for (int square = 0; square < 64; square++)
         {
